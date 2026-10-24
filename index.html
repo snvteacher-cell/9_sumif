@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Що знімати далі?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Урок-самоопрацювання для 9 класу: «Що знімати далі?» (COUNTIF, SUMIF). Теорія → міні-таблиця → 4 завдання → оцінка, що йде вчителю */
+:root{
+  --bg:#F4F1EA; --surface:#FFFFFF; --ink:#1E2430; --muted:#5E6675; --line:#DCD6C8;
+  --accent:#D6452B; --accent-soft:#FBE3DC; --blue:#2458A6; --blue-soft:#E1EAF7;
+  --ok:#24804B; --ok-soft:#DDF1E4; --bad:#B3261E; --bad-soft:#F9DEDC; --warn:#8A5A00; --warn-soft:#FDF0D2;
+  --cell:#FFFFFF; --cell-data:#F2F5F9; --cell-head:#E9ECEF;
+  --display:'Unbounded','Trebuchet MS',system-ui,sans-serif;
+  --body:'Golos Text','Segoe UI',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#14171D; --surface:#1D222B; --ink:#E8EAEE; --muted:#A3AAB6; --line:#343B47;
+  --accent:#FF7A5C; --accent-soft:#3A221D; --blue:#7FA8F0; --blue-soft:#1E2A40;
+  --ok:#6BCB8D; --ok-soft:#1B3325; --bad:#FF8A80; --bad-soft:#3B1E1C; --warn:#F2C062; --warn-soft:#3A2F18;
+  --cell:#1D222B; --cell-data:#252B36; --cell-head:#2C3340; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14171D; --surface:#1D222B; --ink:#E8EAEE; --muted:#A3AAB6; --line:#343B47;
+  --accent:#FF7A5C; --accent-soft:#3A221D; --blue:#7FA8F0; --blue-soft:#1E2A40;
+  --ok:#6BCB8D; --ok-soft:#1B3325; --bad:#FF8A80; --bad-soft:#3B1E1C; --warn:#F2C062; --warn-soft:#3A2F18;
+  --cell:#1D222B; --cell-data:#252B36; --cell-head:#2C3340; color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 var(--body)}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px 120px}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.brand{font:800 15px/1.1 var(--display);letter-spacing:.2px;white-space:nowrap}
+.brand b{color:var(--accent)}
+.who{margin-left:auto;font-size:13px;color:var(--muted);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.steps{display:flex;gap:4px;max-width:860px;margin:0 auto;padding:0 16px 10px}
+.steps button{flex:1;height:8px;border:0;border-radius:4px;background:var(--line);padding:0;cursor:pointer}
+.steps button.done{background:var(--blue)}
+.steps button.cur{background:var(--accent)}
+.steps button:disabled{cursor:default}
+
+h1{font:800 clamp(24px,5vw,36px)/1.15 var(--display);margin:28px 0 10px}
+h2{font:700 clamp(20px,4vw,26px)/1.2 var(--display);margin:26px 0 8px}
+h3{font:700 18px/1.3 var(--body);margin:20px 0 6px}
+.kicker{font:600 12px/1 var(--body);letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);margin-top:26px}
+p{margin:8px 0}
+.lead{font-size:19px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+.story{border-left:6px solid var(--accent)}
+.note{background:var(--blue-soft);border-radius:12px;padding:12px 16px;margin:12px 0}
+.warnbox{background:var(--warn-soft);color:var(--ink);border-radius:12px;padding:12px 16px;margin:12px 0}
+code,.f{font:600 15px/1.4 var(--mono);background:var(--cell-data);border:1px solid var(--line);border-radius:6px;padding:1px 6px;white-space:nowrap}
+.big{font:700 22px/1.3 var(--mono)}
+.formula{font:500 18px/1.6 var(--mono);text-align:center;padding:8px;overflow-x:auto}
+table.simple{border-collapse:collapse;width:100%;margin:10px 0;font-size:15px}
+table.simple th,table.simple td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+table.simple th{background:var(--cell-head)}
+.scroll{overflow-x:auto}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.chip{display:inline-block;background:var(--cell-data);border:1px solid var(--line);border-radius:20px;padding:2px 10px;margin:2px;font:600 15px var(--mono)}
+.chip.hl{background:var(--accent-soft);border-color:var(--accent)}
+
+label.fld{display:block;font-weight:600;margin:12px 0 4px}
+input.txt{font:17px var(--body);padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;width:100%;max-width:420px;background:var(--surface);color:var(--ink)}
+input.txt:focus{outline:2px solid var(--blue);border-color:transparent}
+
+.btn{font:600 16px var(--body);border:0;border-radius:12px;padding:12px 20px;cursor:pointer;background:var(--accent);color:#fff}
+.btn.sec{background:var(--surface);color:var(--ink);border:1.5px solid var(--line)}
+.btn.small{padding:7px 12px;font-size:14px;border-radius:9px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+nav.bottom{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);z-index:6}
+nav.bottom .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center}
+nav.bottom .mid{flex:1;text-align:center;font-size:13px;color:var(--muted)}
+
+/* питання */
+.q{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:14px 0}
+.q .qt{font-weight:600}
+.q .pts{float:right;font:600 12px var(--body);color:var(--muted);margin-left:8px}
+.ans{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.ans input{font:600 18px var(--mono);padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;width:150px;background:var(--surface);color:var(--ink)}
+.ans .unit{color:var(--muted)}
+.opts{display:grid;gap:8px;margin-top:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;font:16px/1.4 var(--body);background:var(--surface);color:var(--ink);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--blue)}
+.opt .mk{flex:0 0 22px;height:22px;border-radius:50%;border:2px solid var(--line);margin-top:1px}
+.opt.sel .mk{border-color:var(--blue);background:var(--blue)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt:disabled{cursor:default}
+.fb{margin-top:8px;border-radius:10px;padding:8px 12px;font-size:15px}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.bad{background:var(--bad-soft);color:var(--bad)}
+.fb.hint{background:var(--warn-soft);color:var(--ink)}
+.fb.hint b{color:var(--warn)}
+.tries{font-size:13px;color:var(--muted)}
+
+/* міні-таблиця */
+.sheetbox{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin:14px 0;overflow:hidden}
+.sheettools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 10px;border-bottom:1px solid var(--line);background:var(--cell-head)}
+.fbar{flex:1;min-width:200px;display:flex;align-items:center;gap:6px;font:500 14px var(--mono)}
+.fbar .ref{min-width:38px;font-weight:700;color:var(--blue)}
+.fbar .raw{flex:1;background:var(--cell);border:1px solid var(--line);border-radius:6px;padding:4px 8px;min-height:28px;overflow-x:auto;white-space:nowrap}
+.gridwrap{overflow-x:auto}
+table.grid{border-collapse:collapse;font:500 15px var(--mono);min-width:100%}
+table.grid th{background:var(--cell-head);color:var(--muted);font-weight:600;font-size:13px;padding:4px 6px;border:1px solid var(--line);min-width:28px}
+table.grid td{border:1px solid var(--line);padding:0;height:36px;min-width:118px}
+table.grid td.data{background:var(--cell-data);padding:0 8px}
+table.grid td.data.num{text-align:right}
+table.grid td.head{background:var(--cell-data);font-family:var(--body);font-weight:700;padding:0 8px;font-size:14px}
+table.grid input{width:100%;height:36px;border:0;padding:0 8px;font:600 15px var(--mono);background:var(--cell);color:var(--ink);text-align:right}
+table.grid input.txtcell{text-align:left}
+table.grid input:focus{outline:2.5px solid var(--blue);outline-offset:-2px;text-align:left}
+table.grid input.err{color:var(--bad)}
+table.grid input.calc{color:var(--blue)}
+table.grid input::placeholder{color:var(--line)}
+.sheethelp{font-size:13px;color:var(--muted);padding:6px 10px;border-top:1px solid var(--line)}
+
+/* результат */
+.result{border:3px solid var(--accent);border-radius:18px;padding:20px;background:var(--surface);text-align:center}
+table.simple tr.hl td{background:var(--accent-soft)}
+table.grid td.data.wide{min-width:190px;white-space:nowrap;font-size:14px}
+.result .grade{font:800 72px/1 var(--display);color:var(--accent);margin:8px 0}
+.result .code{font:700 22px var(--mono);letter-spacing:3px}
+.status{margin-top:12px;padding:10px;border-radius:10px}
+.status.ok{background:var(--ok-soft);color:var(--ok)}
+.status.bad{background:var(--bad-soft);color:var(--bad)}
+.status.wait{background:var(--blue-soft)}
+.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:10px;font-size:14px;z-index:9}
+@media (max-width:560px){
+  body{font-size:16px}
+  .brand span{display:none}
+  .q .pts{float:none;display:block;margin:0 0 4px}
+  table.grid td{min-width:96px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="in"><div class="brand">COUNTIF <b>і</b> SUMIF <span>· 9 клас</span></div><div class="who" id="who"></div></div>
+  <div class="steps" id="steps"></div>
+</header>
+<main class="wrap" id="main"></main>
+<nav class="bottom" id="nav" hidden>
+  <div class="in">
+    <button class="btn sec" id="back">← Назад</button>
+    <div class="mid" id="navmid"></div>
+    <button class="btn" id="next">Далі →</button>
+  </div>
+</nav>
+
+<script>
+/* ===================== налаштування ===================== */
+var TEACHER_EMAIL = 'snv.teacher@gmail.com';
+var LESSON = 'Дані та аналітичні висновки. Функції COUNTIF, SUMIF (9 клас)';
+var STORE_KEY = 'countif9-lesson-v1';
+var SUBJ = 'COUNTIF/SUMIF 9 кл.';
+
+/* ===================== утиліти ===================== */
+function $(s,r){return (r||document).querySelector(s)}
+function el(tag,attrs,html){var e=document.createElement(tag);if(attrs)for(var k in attrs){if(k==='class')e.className=attrs[k];else e.setAttribute(k,attrs[k])}if(html!=null)e.innerHTML=html;return e}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function norm(s){return String(s||'').trim().toLowerCase().replace(/\s+/g,' ').replace(/[ʼ’`']/g,"'")}
+function cyrb53(str,seed){seed=seed||0;var h1=0xdeadbeef^seed,h2=0x41c6ce57^seed;for(var i=0,ch;i<str.length;i++){ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0)}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function fmt(x,d){if(typeof x!=='number')return String(x);if(d==null){d=4}var s=(Math.round(x*Math.pow(10,d))/Math.pow(10,d)).toString();return s.replace('.',',')}
+function parseNum(s){if(s==null)return NaN;s=String(s).trim().replace(/\s/g,'').replace(',','.');if(!/^[-+]?\d*\.?\d+$/.test(s))return NaN;return parseFloat(s)}
+function sum(a){return a.reduce(function(s,x){return s+x},0)}
+function toast(msg){var t=el('div',{class:'toast'},esc(msg));document.body.appendChild(t);setTimeout(function(){t.remove()},2200)}
+function lsGet(){try{return JSON.parse(localStorage.getItem(STORE_KEY)||'null')}catch(e){return null}}
+function lsSet(v){try{localStorage.setItem(STORE_KEY,JSON.stringify(v))}catch(e){}}
+
+/* ===================== формули міні-таблиці ===================== */
+var LOOKALIKE={'А':'A','В':'B','С':'C','Е':'E','Н':'H','І':'I','К':'K','М':'M','О':'O','Р':'P','Т':'T','Х':'X','а':'a','с':'c','е':'e','і':'i','о':'o','р':'p','х':'x'};
+/* назви з російськомовних версій Excel теж працюють */
+var ALIAS={'СЧЁТЕСЛИ':'COUNTIF','СЧЕТЕСЛИ':'COUNTIF','СУММЕСЛИ':'SUMIF','СРЗНАЧЕСЛИ':'AVERAGEIF','СУММ':'SUM','СРЗНАЧ':'AVERAGE','СЧЁТ':'COUNT','СЧЕТ':'COUNT','МАКС':'MAX','МИН':'MIN','ОКРУГЛ':'ROUND'};
+function FErr(code,msg){this.code=code;this.msg=msg}
+function colIdx(c){return c.charCodeAt(0)-65}
+function latinize(s){return String(s).replace(/[А-Яа-яІі]/g,function(ch){return LOOKALIKE[ch]||ch})}
+/* однаковий вигляд тексту: без регістру, зайвих пробілів і схожих латинських літер */
+function canon(s){return latinize(String(s).trim().toLowerCase().replace(/\s+/g,' ').replace(/[ʼ’`']/g,"'"))}
+/* умова COUNTIF / SUMIF: "Ігри", ">1000", "<>Гумор", 500, посилання на клітинку */
+function matcher(cr){
+  if(Array.isArray(cr))cr=cr[0];
+  if(typeof cr==='number')return function(x){return typeof x==='number'&&x===cr};
+  var mm=String(cr).match(/^\s*(<=|>=|<>|<|>|=)?\s*(.*)$/),op=mm[1]||'=',rest=mm[2],val=parseNum(rest);
+  if(!isNaN(val))return function(x){if(typeof x!=='number'){x=parseNum(x);if(isNaN(x))return op==='<>'}
+    return op==='='?x===val:op==='<>'?x!==val:op==='<'?x<val:op==='>'?x>val:op==='<='?x<=val:x>=val};
+  if(op!=='='&&op!=='<>')return function(){return false};
+  var c=canon(rest),re=/[*?]/.test(c)?new RegExp('^'+c.replace(/[.+^${}()|[\]\\]/g,'\\$&').replace(/\*/g,'.*').replace(/\?/g,'.')+'$'):null;
+  return function(x){var s=canon(x===''||x==null?'':x),hit=re?re.test(s):s===c;return op==='='?hit:!hit};
+}
+function evalFormula(src,getCell){
+  src=src.replace(/[«»“”„″]/g,'"');
+  /* кирилицю замінюємо лише поза лапками, щоб "Ігри" лишилося текстом */
+  src=src.split('"').map(function(part,k){if(k%2)return part;
+    part=part.replace(/[А-ЯЁЇІЄа-яёїіє]+(?=\s*\()/g,function(w){return ALIAS[w.toUpperCase()]||w});
+    return latinize(part)}).join('"');
+  var semi=src.indexOf(';')>=0, toks=[], i=0, m;
+  while(i<src.length){
+    var rest=src.slice(i);
+    if(/^\s/.test(rest)){i++;continue}
+    if((m=rest.match(semi?/^\d+([.,]\d+)?/:/^\d+(\.\d+)?/))){toks.push({t:'n',v:parseFloat(m[0].replace(',','.'))});i+=m[0].length;continue}
+    if((m=rest.match(/^"([^"]*)"/))){toks.push({t:'s',v:m[1]});i+=m[0].length;continue}
+    if(rest[0]==='"')throw new FErr('#ПОМИЛКА','Лапки не закриті. Текст в умові пишуть між двома лапками: "Ігри"');
+    if((m=rest.match(/^\$?([A-Za-z])\$?(\d+)(?![A-Za-z0-9_.(])/))){toks.push({t:'r',v:m[1].toUpperCase()+m[2]});i+=m[0].length;continue}
+    if((m=rest.match(/^[A-Za-z_А-ЯЁЇІЄа-яёїієʼ’'][A-Za-z0-9_.А-ЯЁЇІЄа-яёїієʼ’']*/))){toks.push({t:'id',v:m[0].toUpperCase(),raw:m[0]});i+=m[0].length;continue}
+    if((m=rest.match(/^(<=|>=|<>|[-+*\/^():;,<>=&%])/))){toks.push({t:'o',v:m[0]});i+=m[0].length;continue}
+    throw new FErr('#ІМ\'Я?','Незрозумілий символ «'+rest[0]+'»');
+  }
+  var p=0, SEP=semi?';':',';
+  function peek(v){return toks[p]&&toks[p].t==='o'&&toks[p].v===v}
+  function expect(v){if(!peek(v))throw new FErr('#ПОМИЛКА','Очікувалось «'+v+'»');p++}
+  function num(v){if(Array.isArray(v)){if(v.length===1)return num(v[0]);throw new FErr('#ЗНАЧ!','Діапазон тут не підходить')}if(typeof v==='number')return v;if(v===''||v==null)return 0;var n=parseNum(v);if(isNaN(n))throw new FErr('#ЗНАЧ!','Текст замість числа');return n}
+  function expr(){var v=cmp();while(peek('&')){p++;var r=cmp();v=String(Array.isArray(v)?v[0]:v)+String(Array.isArray(r)?r[0]:r)}return v}
+  function cmp(){return add()}
+  function add(){var v=term();while(peek('+')||peek('-')){var o=toks[p++].v,r=term();v=o==='+'?num(v)+num(r):num(v)-num(r)}return v}
+  function term(){var v=power();while(peek('*')||peek('/')){var o=toks[p++].v,r=power();if(o==='*')v=num(v)*num(r);else{if(num(r)===0)throw new FErr('#ДІЛ/0!','Ділення на нуль');v=num(v)/num(r)}}return v}
+  function power(){var v=unary();if(peek('^')){p++;v=Math.pow(num(v),num(power()))}return v}
+  function unary(){if(peek('-')){p++;return -num(unary())}if(peek('+')){p++;return unary()}return primary()}
+  function primary(){
+    var t=toks[p];
+    if(!t)throw new FErr('#ПОМИЛКА','Формула обірвалась');
+    if(t.t==='n'){p++;return t.v}
+    if(t.t==='s'){p++;return t.v}
+    if(t.t==='r'){p++;
+      if(peek(':')){p++;var t2=toks[p++];if(!t2||t2.t!=='r')throw new FErr('#ПОМИЛКА','Після «:» має бути клітинка');return range(t.v,t2.v)}
+      return getCell(t.v)}
+    if(t.t==='id'){p++;
+      if(!peek('(')){var w=/[А-ЯЁЇІЄа-яёїіє]/.test(t.raw)?t.raw.replace(/[A-Za-z]/g,function(ch){for(var k in LOOKALIKE)if(LOOKALIKE[k]===ch)return k;return ch}):t.raw;
+        throw new FErr('#ІМ\'Я?','Таблиця не знає слова «'+w+'». Якщо це текст для умови, візьміть його в лапки: "'+w+'"');}
+      p++;var args=[];
+      if(!peek(')')){args.push(expr());while(peek(SEP)||peek(';')||(!semi&&peek(','))){p++;args.push(expr())}}
+      expect(')');return callFn(t.v,args)}
+    if(t.t==='o'&&t.v==='('){p++;var v=expr();expect(')');return v}
+    throw new FErr('#ПОМИЛКА','Зайвий знак «'+t.v+'»');
+  }
+  function range(a,b){var c1=colIdx(a[0]),c2=colIdx(b[0]),r1=+a.slice(1),r2=+b.slice(1),out=[];
+    if(c1>c2){var x=c1;c1=c2;c2=x}if(r1>r2){var y=r1;r1=r2;r2=y}
+    for(var r=r1;r<=r2;r++)for(var c=c1;c<=c2;c++)out.push(getCell(String.fromCharCode(65+c)+r));return out}
+  function nums(args){var out=[];args.forEach(function(a){if(Array.isArray(a))a.forEach(function(x){if(typeof x==='number')out.push(x)});else if(typeof a==='number')out.push(a);else if(a!==''){var n=parseNum(a);if(!isNaN(n))out.push(n)}});return out}
+  function need(args,n,name,how){if(args.length<n)throw new FErr('#ПОМИЛКА','У '+name+' замало аргументів. Потрібно: '+how)}
+  function picked(args,name){
+    var rng=Array.isArray(args[0])?args[0]:[args[0]],f=matcher(args[1]),sr=args.length>2?(Array.isArray(args[2])?args[2]:[args[2]]):rng,out=[];
+    rng.forEach(function(x,k){if(f(x)){var v=sr[k];if(typeof v==='number')out.push(v)}});return out;
+  }
+  function callFn(name,args){
+    var a;
+    switch(name){
+      case 'SUM': return sum(nums(args));
+      case 'AVERAGE': a=nums(args);if(!a.length)throw new FErr('#ДІЛ/0!','У діапазоні немає чисел');return sum(a)/a.length;
+      case 'MIN': a=nums(args);return a.length?Math.min.apply(null,a):0;
+      case 'MAX': a=nums(args);return a.length?Math.max.apply(null,a):0;
+      case 'COUNT': return nums(args).length;
+      case 'COUNTA': var cnt=0;args.forEach(function(x){(Array.isArray(x)?x:[x]).forEach(function(y){if(y!==''&&y!=null)cnt++})});return cnt;
+      case 'ROUND': var f=Math.pow(10,args.length>1?num(args[1]):0);return Math.round(num(args[0])*f)/f;
+      case 'ABS': return Math.abs(num(args[0]));
+      case 'COUNTIF':
+        need(args,2,'COUNTIF','діапазон і умова, напр. (B2:B9;"Піца")');
+        var rng=Array.isArray(args[0])?args[0]:[args[0]],fm=matcher(args[1]);
+        return rng.filter(function(x){return fm(x)}).length;
+      case 'SUMIF':
+        need(args,2,'SUMIF','де шукати; умова; що додавати');
+        return sum(picked(args));
+      case 'AVERAGEIF':
+        need(args,2,'AVERAGEIF','де шукати; умова; що усереднювати');
+        a=picked(args);if(!a.length)throw new FErr('#ДІЛ/0!','Жоден рядок не підійшов під умову');return sum(a)/a.length;
+    }
+    throw new FErr('#ІМ\'Я?','Функції «'+name+'» тут немає. Перевірте назву.');
+  }
+  var v=expr();
+  if(p<toks.length)throw new FErr('#ПОМИЛКА','Зайве в кінці: «'+(toks[p].raw||toks[p].v)+'»');
+  if(Array.isArray(v)){if(v.length===1)return v[0];throw new FErr('#ЗНАЧ!','Результат — цілий діапазон. Потрібна функція, напр. COUNTIF(...)')}
+  return v;
+}
+
+/* Міні-таблиця: cfg = {id, ncols, nrows, cells:{A1:..}, help, placeholder, wide:['A']} */
+function Sheet(cfg,store){
+  this.cfg=cfg;this.store=store;
+  if(!store.sheets[cfg.id])store.sheets[cfg.id]={};
+  this.user=store.sheets[cfg.id];
+}
+Sheet.prototype.raw=function(ref){var c=this.cfg;if(ref in c.cells)return c.cells[ref];return this.user[ref]||''};
+Sheet.prototype.val=function(ref,seen){
+  seen=seen||{};
+  if(seen[ref])throw new FErr('#ЦИКЛ','Формула посилається сама на себе');
+  var r=this.raw(ref);
+  if(typeof r==='number')return r;
+  if(r==='')return '';
+  if(r[0]==='='){var self=this;seen[ref]=1;return evalFormula(r.slice(1),function(x){if(!self.inGrid(x))return '';var s2={};for(var k in seen)s2[k]=1;return self.val(x,s2)})}
+  var n=parseNum(r);return isNaN(n)?r:n;
+};
+Sheet.prototype.inGrid=function(ref){var c=colIdx(ref[0]),r=+ref.slice(1);return c>=0&&c<this.cfg.ncols&&r>=1&&r<=this.cfg.nrows};
+Sheet.prototype.display=function(ref){
+  try{var v=this.val(ref);
+    if(typeof v==='number')return {text:fmt(v),calc:String(this.raw(ref))[0]==='='};return {text:String(v),calc:String(this.raw(ref))[0]==='='}}
+  catch(e){if(e instanceof FErr)return {text:e.code,err:true,msg:e.msg};return {text:'#ПОМИЛКА',err:true,msg:String(e)}}
+};
+Sheet.prototype.render=function(){
+  var c=this.cfg,self=this,box=el('div',{class:'sheetbox'});
+  var tools=el('div',{class:'sheettools'});
+  var fbar=el('div',{class:'fbar'},'<span class="ref">—</span><span style="color:var(--muted)">fx</span><div class="raw"></div>');
+  tools.appendChild(fbar);
+  var copyBtn=el('button',{class:'btn sec small',type:'button',title:'Скопіювати дані, щоб вставити в Excel або Google Таблиці'},'📋 Копіювати дані для Excel');
+  copyBtn.onclick=function(){self.copy()};
+  tools.appendChild(copyBtn);
+  box.appendChild(tools);
+  var gw=el('div',{class:'gridwrap'}),t=el('table',{class:'grid'}),hr=el('tr');
+  hr.appendChild(el('th'));
+  for(var ci=0;ci<c.ncols;ci++)hr.appendChild(el('th',null,String.fromCharCode(65+ci)));
+  t.appendChild(hr);
+  this.inputs={};
+  for(var r=1;r<=c.nrows;r++){
+    var tr=el('tr');tr.appendChild(el('th',null,String(r)));
+    for(ci=0;ci<c.ncols;ci++){
+      var col=String.fromCharCode(65+ci),ref=col+r,td=el('td');
+      if(ref in c.cells){var v=c.cells[ref];
+        td.className=(r===1?'head':'data')+(typeof v==='number'?' num':'')+(c.wide&&c.wide.indexOf(col)>=0?' wide':'');td.textContent=typeof v==='number'?fmt(v):v;
+        (function(ref){td.onclick=function(){self.showBar(ref)}})(ref);
+      }else{
+        var inp=el('input',{type:'text',autocomplete:'off',autocapitalize:'off',spellcheck:'false','aria-label':'Клітинка '+ref});
+        if(c.placeholder&&c.placeholder[ref]){inp.placeholder=c.placeholder[ref];inp.classList.add('txtcell')}
+        this.inputs[ref]=inp;
+        (function(ref,inp){
+          inp.onfocus=function(){inp.value=self.raw(ref);inp.classList.remove('err','calc');self.showBar(ref)};
+          inp.oninput=function(){self.bar.raw.textContent=inp.value};
+          inp.onblur=function(){self.set(ref,inp.value)};
+          inp.onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();inp.blur();var nx=self.inputs[ref[0]+(+ref.slice(1)+1)];if(nx)nx.focus()}};
+        })(ref,inp);
+        td.appendChild(inp);
+      }
+      tr.appendChild(td);
+    }
+    t.appendChild(tr);
+  }
+  gw.appendChild(t);box.appendChild(gw);
+  this.help=el('div',{class:'sheethelp'},c.help||'Клацніть білу клітинку, введіть формулу, що починається зі знака <b>=</b>, і натисніть Enter.');
+  box.appendChild(this.help);
+  this.bar={ref:$('.ref',fbar),raw:$('.raw',fbar)};
+  this.refresh();
+  return box;
+};
+Sheet.prototype.showBar=function(ref){
+  this.bar.ref.textContent=ref;var r=this.raw(ref);this.bar.raw.textContent=typeof r==='number'?fmt(r):r;
+  var d=this.display(ref);
+  this.help.innerHTML=d.err?'<b style="color:var(--bad)">'+esc(d.text)+'</b> — '+esc(d.msg):(this.cfg.help||'Клацніть білу клітинку, введіть формулу, що починається зі знака <b>=</b>, і натисніть Enter.');
+};
+Sheet.prototype.set=function(ref,v){v=v.trim();if(v==='')delete this.user[ref];else this.user[ref]=v;save();this.refresh();
+  var d=this.display(ref);if(d.err){this.help.innerHTML='<b style="color:var(--bad)">'+ref+': '+esc(d.text)+'</b> — '+esc(d.msg)}};
+Sheet.prototype.refresh=function(){for(var ref in this.inputs){var inp=this.inputs[ref];if(document.activeElement===inp)continue;var d=this.display(ref);inp.value=this.raw(ref)===''?'':d.text;inp.classList.toggle('err',!!d.err);inp.classList.toggle('calc',!!d.calc)}};
+Sheet.prototype.copy=function(){var c=this.cfg,lines=[];for(var r=1;r<=c.nrows;r++){var row=[],any=false;for(var ci=0;ci<c.ncols;ci++){var ref=String.fromCharCode(65+ci)+r;if(ref in c.cells){any=true;var v=c.cells[ref];row.push(typeof v==='number'?fmt(v):v)}else row.push('')}if(any)lines.push(row.join('\t'))}
+  var txt=lines.join('\n');
+  function done(){toast('Скопійовано. Вставте в клітинку A1 вашої таблиці (Ctrl+V).')}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,function(){fallback()})}else fallback();
+  function fallback(){var ta=el('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done()}catch(e){toast('Не вдалося скопіювати')}ta.remove()}
+};
+function sheetCfg(id,ncols,nrows,cells,help,placeholder,wide){return {id:id,ncols:ncols,nrows:nrows,cells:cells,help:help,placeholder:placeholder,wide:wide}}
+function colCells(col,startRow,arr,cells){arr.forEach(function(v,i){cells[col+(startRow+i)]=v});return cells}
+
+/* ===================== стан ===================== */
+var S=lsGet()||{v:1,step:0,sheets:{},answers:{},theory:{}};
+if(!S.sheets)S.sheets={};if(!S.answers)S.answers={};if(!S.theory)S.theory={};
+function save(){lsSet(S)}
+
+/* ===================== персональні дані ===================== */
+var D=null;
+function ri(rng,a,b){return a+Math.floor(rng()*(b-a+1))}
+function shuffle(rng,a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+var THEMES=['Ігри','Гумор','Тварини','Лайфхаки'];
+var TITLES={
+  'Ігри':['Minecraft за 1 день','Топ-5 багів у FIFA','Новий бравлер','Граю наосліп','Roblox-паркур','Fortnite з братом','Спідран Mario','Найгірший скін','Моя ферма в Stardew','Бос з 1-ї спроби'],
+  'Гумор':['Коли кажуть «тест»','Мама і Wi-Fi','Перший урок після канікул','Я о 3-й ночі','Збори, але мюзикл','«Я на хвилинку»'],
+  'Тварини':['Кіт проти огірка','Пес танцює вальс','Хом’як-грабіжник','Папуга знає пароль','Кіт іде на урок'],
+  'Лайфхаки':['Прибрати кімнату за 5 хв','Вивчити вірш за 10 хв','Рюкзак, у який влазить усе','Як не проспати','Лайфхак з олівцем','Зарядка без дроту']
+};
+function genData(seedStr){
+  var rng=mulberry32(cyrb53(seedStr)),d={},rows,by;
+  for(var guard=0;guard<500;guard++){
+    var n={'Ігри':ri(rng,7,8),'Тварини':3,'Гумор':ri(rng,4,5)};n['Лайфхаки']=20-n['Ігри']-n['Тварини']-n['Гумор'];
+    var lo={'Ігри':600,'Гумор':450,'Тварини':1700,'Лайфхаки':350},hi={'Ігри':1350,'Гумор':1250,'Тварини':2600,'Лайфхаки':1150};
+    rows=[];by={};
+    THEMES.forEach(function(th){by[th]={n:n[th],sum:0};var tt=shuffle(rng,TITLES[th]);for(var k=0;k<n[th];k++){var v=ri(rng,lo[th]/10,hi[th]/10)*10+ri(rng,0,9);rows.push({t:tt[k],th:th,v:v});by[th].sum+=v}});
+    THEMES.forEach(function(th){by[th].avg=by[th].sum/by[th].n});
+    var maxSum=Math.max.apply(null,THEMES.map(function(th){return by[th].sum})),maxAvg=Math.max.apply(null,THEMES.map(function(th){return by[th].avg}));
+    if(by['Ігри'].sum!==maxSum||by['Ігри'].sum<by['Тварини'].sum+600)continue;
+    if(by['Тварини'].avg!==maxAvg||by['Тварини'].avg<1.6*by['Ігри'].avg)continue;
+    var N=[1000,1200][ri(rng,0,1)];
+    if(rows.some(function(r){return r.v===N}))continue;
+    var above=rows.filter(function(r){return r.v>N});
+    if(above.length<4||above.length>10)continue;
+    d.N=N;d.cntAbove=above.length;d.sumAbove=sum(above.map(function(r){return r.v}));
+    break;
+  }
+  d.rows=shuffle(rng,rows);d.by=by;d.total=sum(d.rows.map(function(r){return r.v}));
+  d.rng=rng;
+  return d;
+}
+
+/* ===================== питання ===================== */
+/* тип num: правильне значення, допуск, підказки; тип mc: варіанти, одна спроба */
+var Q={};
+function buildQuestions(){
+  var d=D,G=d.by['Ігри'],T=d.by['Тварини'],H=d.by['Гумор'],o=function(arr){return shuffle(mulberry32(cyrb53(norm(S.name)+'|opts|'+arr[0].t)),arr)};
+  function near(x,y,t){return Math.abs(x-y)<=(t==null?0.01:t)}
+  Q={
+    t1a:{task:1,type:'num',ok:function(x){return near(x,G.n)},ans:String(G.n),unit:'відео',
+      text:'Скільки відео на каналі про <b>Ігри</b>?',
+      hints:['Кількість рядків, які підходять під умову, рахує <code>COUNTIF</code>. Пишіть формулу у вільній білій клітинці, починаючи зі знака «=».','Перший аргумент: діапазон, де записані теми (стовпець B, від B2 до B21). Другий: умова, тобто слово Ігри в лапках.'],
+      check:function(x){if(near(x,G.sum))return 'Це сума переглядів. А питання «скільки відео», тобто кількість.';if(near(x,20))return 'Це всі відео каналу. Потрібні лише ігрові.'}},
+    t1b:{task:1,type:'num',ok:function(x){return near(x,T.n)},ans:String(T.n),unit:'відео',
+      text:'Скільки відео про <b>Тварини</b>?',
+      hints:['Та сама функція <code>COUNTIF</code>, тільки інша умова.','Діапазон той самий (теми в стовпці B), а в лапках тепер слово Тварини.']},
+    t1c:{task:1,type:'num',ok:function(x){return near(x,d.cntAbove)},ans:String(d.cntAbove),unit:'відео',
+      text:'Скільки відео набрали <b>понад '+d.N+'</b> переглядів? Це ваші «хіти».',
+      hints:['Знову <code>COUNTIF</code>, але тепер умова числова. Шукати треба в стовпці з переглядами (C2:C21).','Умова зі знаком порівняння пишеться в лапках разом зі знаком: «більше ніж '+d.N+'» записується як "&gt;'+d.N+'".'],
+      check:function(x){if(near(x,20-d.cntAbove))return 'Ви порахували відео, у яких переглядів менше. Потрібні ті, де більше за '+d.N+'.';if(near(x,d.sumAbove))return 'Це сума переглядів хітів, а питання про кількість відео.'}},
+    t2a:{task:2,type:'num',ok:function(x){return near(x,G.sum)},ans:String(G.sum),unit:'переглядів',
+      text:'Скільки <b>переглядів разом</b> зібрали всі відео про Ігри?',
+      hints:['Суму за умовою рахує <code>SUMIF</code>. У неї три аргументи: де шукати, що шукати, що додавати.','Шукаємо в темах (B2:B21) слово Ігри, а додаємо перегляди (C2:C21).'],
+      check:function(x){if(near(x,G.n))return 'Це кількість відео (COUNTIF). Потрібна сума переглядів, тобто SUMIF.';if(near(x,d.total))return 'Це перегляди всього каналу. Умова «тільки Ігри» не спрацювала: перевірте другий аргумент.'}},
+    t2b:{task:2,type:'num',ok:function(x){return near(x,T.sum)},ans:String(T.sum),unit:'переглядів',
+      text:'Скільки переглядів разом зібрали відео про <b>Тварини</b>?',
+      hints:['Функція та сама: <code>SUMIF</code>.','Діапазони ті самі (B2:B21 і C2:C21), змінюється лише слово в лапках.'],
+      check:function(x){if(near(x,T.n))return 'Це кількість відео. Потрібна сума переглядів (SUMIF).';if(near(x,d.total))return 'Це перегляди всього каналу. Перевірте умову.'}},
+    t2c:{task:2,type:'num',ok:function(x){return near(x,d.sumAbove)},ans:String(d.sumAbove),unit:'переглядів',
+      text:'Скільки переглядів разом дали ваші хіти, тобто відео з <b>понад '+d.N+'</b> переглядами?',
+      hints:['Це <code>SUMIF</code>, але шукати й додавати треба в одному й тому самому стовпці. Тоді третій аргумент можна не писати.','Діапазон C2:C21, умова "&gt;'+d.N+'" (як у завданні 1).'],
+      check:function(x){if(near(x,d.cntAbove))return 'Це кількість хітів. Потрібна сума їхніх переглядів.';if(near(x,d.total-d.sumAbove))return 'Це сума переглядів НЕ хітів. Перевірте знак у умові.';if(near(x,d.total))return 'Це перегляди всього каналу, без умови.'}},
+    t3a:{task:3,type:'num',ok:function(x){return near(x,G.avg,0.5)},ans:fmt(G.avg,1),unit:'переглядів',
+      text:'Скільки переглядів <b>в середньому</b> набирає одне відео про Ігри? Округліть до цілого.',
+      hints:['Середнє на одне відео = сума переглядів : кількість відео. Обидва числа ви вже знайшли в завданнях 1 і 2.','Можна поділити клітинку на клітинку, напр. =E5/E2, або написати SUMIF(...)/COUNTIF(...) в одній формулі.'],
+      check:function(x){if(near(x,G.sum,1))return 'Це сума переглядів. Її ще треба поділити на кількість ігрових відео.';if(near(x,d.total/20,0.5))return 'Це середнє для всього каналу. Потрібні лише відео про Ігри.';if(near(x,G.n/G.sum,0.5))return 'Ділити треба навпаки: перегляди на кількість відео.'}},
+    t3b:{task:3,type:'num',ok:function(x){return near(x,T.avg,0.5)},ans:fmt(T.avg,1),unit:'переглядів',
+      text:'А скільки в середньому набирає одне відео про <b>Тварини</b>? Округліть до цілого.',
+      hints:['Так само: сума переглядів «Тварин» : кількість відео про тварин.','Сума є у відповіді 2.2, кількість у відповіді 1.2.'],
+      check:function(x){if(near(x,T.sum,1))return 'Це сума. Поділіть її на кількість відео про тварин.';if(near(x,d.total/20,0.5))return 'Це середнє для всього каналу. Потрібні лише відео про Тварини.'}},
+    t3c:{task:3,type:'mc',text:'Ви хочете, щоб <b>наступні</b> відео набирали якомога більше переглядів. Що варто знімати?',
+      opts:o([{t:'Ігри: вони разом зібрали найбільше переглядів.'},{t:'Тварини: одне таке відео в середньому набирає найбільше.',r:1},{t:'Байдуже: усі теми однакові.'}]),
+      why:'Для рішення про наступне відео важить, скільки в середньому дає <b>одне</b> відео. У «Тварин» це приблизно '+fmt(Math.round(T.avg))+', а в «Ігор» лише '+fmt(Math.round(G.avg))+'.'},
+    t3d:{task:3,type:'mc',text:'Тоді чому в «Ігор» найбільша <b>сума</b> переглядів?',
+      opts:o([{t:'Бо ігрових відео найбільше ('+G.n+' шт.), а сума росте разом з кількістю.',r:1},{t:'Бо ігри глядачам подобаються найбільше.'},{t:'Таблиця помилилась.'}]),
+      why:'Сума залежить від того, <b>скільки</b> відео ви зняли. Порівнювати теми чесно можна лише за середнім на одне відео.'},
+    t4a:{task:4,type:'mc',text:'Друг написав <code>=COUNTIF(B2:B21;Гумор)</code> і отримав помилку <code>#ІМ’Я?</code>. Що не так?',
+      opts:o([{t:'Слово Гумор треба взяти в лапки: "Гумор".',r:1},{t:'Діапазон треба писати через тире: B2-B21.'},{t:'Для тексту COUNTIF не працює, треба SUMIF.'}]),
+      why:'Текст в умові завжди береться в лапки. Без лапок таблиця думає, що «Гумор» — це назва функції чи клітинки, і не знаходить її.'},
+    t4b:{task:4,type:'mc',text:'Яка формула порахує, скільки переглядів <b>разом</b> зібрали відео з гумором?',
+      opts:o([{t:'<code>=SUMIF(B2:B21;"Гумор";C2:C21)</code>',r:1},{t:'<code>=SUMIF(C2:C21;"Гумор";B2:B21)</code>'},{t:'<code>=COUNTIF(B2:B21;"Гумор")</code>'}]),
+      why:'Спершу діапазон, де шукати умову (теми, B), потім сама умова, потім діапазон, що додавати (перегляди, C). COUNTIF порахував би кількість відео, а не перегляди.'}
+  };
+}
+var TASK_POINTS={1:3,2:3,3:4,4:2};
+var QNAMES={t1a:'1.1 К-сть відео «Ігри»',t1b:'1.2 К-сть відео «Тварини»',t1c:'1.3 К-сть хітів',t2a:'2.1 Перегляди «Ігри»',t2b:'2.2 Перегляди «Тварини»',t2c:'2.3 Перегляди хітів',t3a:'3.1 Середнє «Ігри»',t3b:'3.2 Середнє «Тварини»',t3c:'3.3 Що знімати',t3d:'3.4 Чому сума більша',t4a:'4.1 Помилка без лапок',t4b:'4.2 Правильна SUMIF'};
+
+function qPoints(id){var a=S.answers[id];if(!a)return 0;return a.pts||0}
+function taskPoints(t){var s=0;for(var id in Q)if(Q[id].task===t)s+=qPoints(id);return s}
+function totalPoints(){var s=0;for(var id in Q)s+=qPoints(id);return s}
+
+function renderQ(id){
+  var q=Q[id],a=S.answers[id]||(S.answers[id]={tries:0,done:false,pts:0,given:[]}),box=el('div',{class:'q'});
+  var num=QNAMES[id].split(' ')[0];
+  box.appendChild(el('div',{class:'qt'},'<span class="pts">1 бал</span><span style="color:var(--muted)">'+num+'.</span> '+q.text));
+  var fbz=el('div');
+  if(q.type==='num'){
+    var row=el('div',{class:'ans'}),inp=el('input',{type:'text',inputmode:'decimal',autocomplete:'off',placeholder:'відповідь','aria-label':'Відповідь'}),btn=el('button',{class:'btn small',type:'button'},'Перевірити'),tries=el('span',{class:'tries'});
+    row.appendChild(inp);if(q.unit)row.appendChild(el('span',{class:'unit'},q.unit));row.appendChild(btn);row.appendChild(tries);box.appendChild(row);box.appendChild(fbz);
+    function paint(){
+      fbz.innerHTML='';
+      if(a.done){inp.value=a.given[a.given.length-1]||'';inp.disabled=true;btn.disabled=true;
+        if(a.pts>0)fbz.appendChild(el('div',{class:'fb ok'},'✓ Правильно! '+(a.pts===1?'+1 бал':'+0,5 бала (з третьої спроби)')));
+        else fbz.appendChild(el('div',{class:'fb bad'},'Спроби закінчились. Правильна відповідь: <b>'+esc(q.ans)+'</b>. Розберіться, як її отримати, бо це знадобиться далі.'));
+        tries.textContent='';return}
+      tries.textContent=a.tries?('Спроба '+(a.tries+1)+' з 3'):'3 спроби';
+      if(a.tries>0){
+        if(a.lastMsg)fbz.appendChild(el('div',{class:'fb bad'},'✗ '+esc(a.lastMsg)));
+        else fbz.appendChild(el('div',{class:'fb bad'},'✗ Поки що ні. Ваша відповідь: '+esc(a.given[a.given.length-1])));
+        for(var h=0;h<Math.min(a.tries,q.hints.length);h++)fbz.appendChild(el('div',{class:'fb hint'},'<b>Підказка '+(h+1)+':</b> '+q.hints[h]));
+      }
+    }
+    btn.onclick=function(){
+      if(S.finished)return;
+      var x=parseNum(inp.value);
+      if(isNaN(x)){toast('Введіть число, наприклад 7 або 1250');inp.focus();return}
+      a.given.push(inp.value.trim());a.tries++;
+      if(q.ok(x)){a.done=true;a.pts=a.tries<=2?1:0.5;a.lastMsg=''}
+      else{a.lastMsg=q.check&&q.check(x)||'';if(a.tries>=3){a.done=true;a.pts=0}}
+      save();paint();updateNav();
+    };
+    inp.onkeydown=function(e){if(e.key==='Enter')btn.click()};
+    paint();
+  }else{
+    var opts=el('div',{class:'opts'});box.appendChild(opts);box.appendChild(fbz);
+    q.opts.forEach(function(op,i){
+      var b=el('button',{class:'opt',type:'button'},'<span class="mk"></span><span>'+op.t+'</span>');
+      b.onclick=function(){if(a.done||S.finished)return;a.done=true;a.choice=i;a.pts=op.r?1:0;a.tries=1;a.given=[op.t.replace(/<[^>]+>/g,'')];save();paintMc();updateNav()};
+      opts.appendChild(b);
+    });
+    function paintMc(){
+      var bs=opts.children;fbz.innerHTML='';
+      for(var i=0;i<bs.length;i++){bs[i].disabled=!!a.done;bs[i].classList.remove('sel','right','wrong');
+        if(a.done){if(q.opts[i].r)bs[i].classList.add('right');else if(i===a.choice)bs[i].classList.add('wrong')}}
+      if(a.done)fbz.appendChild(el('div',{class:'fb '+(a.pts?'ok':'bad')},(a.pts?'✓ Так! +1 бал. ':'✗ Ні. ')+q.why));
+      else fbz.appendChild(el('div',{class:'tries'},'Одна спроба: подумайте, перш ніж натиснути.'));
+    }
+    paintMc();
+  }
+  return box;
+}
+
+/* ===================== перевір себе в теорії (без оцінки) ===================== */
+function selfCheck(id,text,opts,ok,why){
+  var box=el('div',{class:'q'});
+  box.appendChild(el('div',{class:'qt'},'<span class="pts">без оцінки</span>🤔 Перевір себе: '+text));
+  var os=el('div',{class:'opts'}),fb=el('div');box.appendChild(os);box.appendChild(fb);
+  opts.forEach(function(t,i){var b=el('button',{class:'opt',type:'button'},'<span class="mk"></span><span>'+t+'</span>');b.onclick=function(){S.theory[id]=i;save();paint()};os.appendChild(b)});
+  function paint(){var c=S.theory[id];fb.innerHTML='';for(var i=0;i<os.children.length;i++){os.children[i].classList.remove('right','wrong');if(c!=null){if(i===ok)os.children[i].classList.add('right');else if(i===c)os.children[i].classList.add('wrong')}}
+    if(c!=null)fb.appendChild(el('div',{class:'fb '+(c===ok?'ok':'hint')},(c===ok?'✓ Так. ':'Не зовсім. ')+why))}
+  paint();return box;
+}
+
+/* ===================== сторінки ===================== */
+var PAGES=[
+ {id:'start',title:'Початок'},
+ {id:'th1',title:'Від даних до висновку'},
+ {id:'th2',title:'COUNTIF'},
+ {id:'th3',title:'Умови'},
+ {id:'th4',title:'SUMIF'},
+ {id:'th5',title:'Чесне порівняння'},
+ {id:'th6',title:'Спробуйте в таблиці'},
+ {id:'task1',title:'Завдання 1'},
+ {id:'task2',title:'Завдання 2'},
+ {id:'task3',title:'Завдання 3'},
+ {id:'task4',title:'Завдання 4'},
+ {id:'finish',title:'Результат'}
+];
+
+/* дані шкільного буфету для теорії (інші, ніж у завданнях) */
+var BUF=[['Піца',25],['Сік',15],['Піца',25],['Булочка',12],['Сік',15],['Піца',25],['Салат',30],['Булочка',12]];
+function bufTable(hl){
+  return '<div class="scroll"><table class="simple" style="max-width:460px"><tr><th></th><th>A: Покупка</th><th>B: Товар</th><th>C: Ціна, грн</th></tr>'+
+    BUF.map(function(r,i){return '<tr'+(hl&&hl(r)?' class="hl"':'')+'><th>'+(i+2)+'</th><td>№'+(i+1)+'</td><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>'}).join('')+'</table></div>';
+}
+
+var R={};
+R.start=function(m){
+  m.innerHTML='<h1>Що знімати далі?</h1>'+
+  '<p class="lead">Уявіть, що у вас свій TikTok-канал і вже 20 відео. Одні набрали купу переглядів, інші майже нічого. Сьогодні ви станете аналітиком свого каналу: порахуєте, що «заходить», і вирішите, яке відео знімати наступним.</p>'+
+  '<div class="card"><b>Як усе влаштовано</b><ol style="margin:6px 0 0;padding-left:22px">'+
+  '<li>Коротка теорія: 5 сторінок про функції <b>COUNTIF</b> і <b>SUMIF</b>. На кожній є питання «перевір себе» (без оцінки).</li>'+
+  '<li>Міні-таблиця прямо на сторінці: працює як Excel, і нічого встановлювати не треба.</li>'+
+  '<li>4 завдання на <b>12 балів</b>. Перегляди в кожного <b>свої</b>, тому відповідь сусіда вам не підійде.</li>'+
+  '<li>Після кожної помилки з’являється підказка. Для числових відповідей є 3 спроби.</li>'+
+  '<li>Наприкінці оцінка автоматично надійде вчителю.</li></ol></div>'+
+  '<div class="card" id="reg"><label class="fld" for="nm">Прізвище та ім’я</label><input class="txt" id="nm" placeholder="напр. Коваленко Марія" autocomplete="name">'+
+  '<label class="fld" for="cl">Клас</label><input class="txt" id="cl" placeholder="напр. 9-А" style="max-width:160px">'+
+  '<p class="tries" style="margin-top:10px">Пишіть ім’я правильно: від нього залежать ваші числа, і саме його побачить учитель.</p>'+
+  '<button class="btn" id="go" style="margin-top:8px">Почати урок →</button></div>';
+  if(S.name){
+    $('#reg').innerHTML='<p>Ви вже почали урок як <b>'+esc(S.name)+'</b>, '+esc(S.cls)+'.</p><button class="btn" id="cont">Продовжити →</button>'+
+      (S.finished?'':'<p class="tries" style="margin-top:12px">Не ви? <a href="#" id="reset">Почати під іншим ім’ям</a> (поточний прогрес зникне).</p>');
+    $('#cont').onclick=function(){go(S.finished?PAGES.length-1:Math.max(1,S.maxStep||1))};
+    var rs=$('#reset');if(rs)rs.onclick=function(e){e.preventDefault();if(confirm('Стерти прогрес і почати заново?')){S={v:1,step:0,sheets:{},answers:{},theory:{}};save();D=null;render()}};
+    return;
+  }
+  $('#go').onclick=function(){
+    var n=$('#nm').value.trim().replace(/\s+/g,' '),c=$('#cl').value.trim().toUpperCase().replace(/\s+/g,'');
+    if(n.split(' ').length<2||n.length<5){toast('Введіть прізвище та ім’я');$('#nm').focus();return}
+    if(!c){toast('Введіть клас');$('#cl').focus();return}
+    S.name=n;S.cls=c;S.started=new Date().toISOString();save();initData();go(1);
+  };
+};
+R.th1=function(m){
+  m.innerHTML='<div class="kicker">Теорія 1 з 6</div><h1>Від даних до висновку</h1>'+
+  '<p>Таблиця з сотнею рядків сама нічого не каже. Щоб отримати з неї користь, аналітик іде так:</p>'+
+  '<div class="card"><ol style="margin:0;padding-left:22px">'+
+  '<li><b>Питання.</b> Що я хочу дізнатися? Напр.: «Що в буфеті купують найчастіше?»</li>'+
+  '<li><b>Підрахунок.</b> Рахуємо не все підряд, а лише рядки, що підходять під <b>умову</b>: скільки разів купили піцу, скільки грошей принесла піца.</li>'+
+  '<li><b>Порівняння.</b> Ставимо числа поруч: піца проти соку, проти булочки.</li>'+
+  '<li><b>Висновок.</b> Коротке речення, на яке можна спертися: «Піцу купують найчастіше, тож її треба замовляти більше».</li></ol></div>'+
+  '<p>Рахувати очима довго, і легко помилитися. Тому в Excel є дві функції з умовою:</p>'+
+  '<div class="scroll"><table class="simple"><tr><th>Функція</th><th>Відповідає на питання</th><th>Приклад</th></tr>'+
+  '<tr><td><code>COUNTIF</code></td><td><b>Скільки разів?</b> (кількість рядків)</td><td>Скільки разів купили піцу?</td></tr>'+
+  '<tr><td><code>SUMIF</code></td><td><b>Скільки всього?</b> (сума чисел)</td><td>Скільки гривень принесла піца?</td></tr></table></div>'+
+  '<p class="tries">COUNT означає «порахувати», SUM — «сума», IF — «якщо». Тобто «порахуй, якщо…» і «додай, якщо…».</p>';
+  m.appendChild(selfCheck('th1','Учитель хоче знати, <b>скільки учнів</b> отримали 12 за контрольну. Яка функція потрібна?',['COUNTIF','SUMIF'],0,'Питання «скільки учнів» — це кількість рядків, тобто COUNTIF. SUMIF знадобився б для питання «яка сума балів».'));
+};
+R.th2=function(m){
+  m.innerHTML='<div class="kicker">Теорія 2 з 6</div><h1>COUNTIF: скільки разів?</h1>'+
+  '<p>Шкільний буфет записує кожну покупку:</p>'+bufTable(function(r){return r[0]==='Піца'})+
+  '<div class="card"><div class="formula">=COUNTIF(<span style="color:var(--blue)">B2:B9</span>; <span style="color:var(--accent)">"Піца"</span>)</div>'+
+  '<ul style="padding-left:22px;margin:6px 0"><li><b style="color:var(--blue)">B2:B9</b> — діапазон, <b>де шукати</b> (стовпець з товарами).</li>'+
+  '<li><b style="color:var(--accent)">"Піца"</b> — <b>умова</b>: яке значення рахувати. Текст пишемо в лапках.</li></ul>'+
+  '<p>Таблиця переглядає B2…B9 і рахує рядки зі словом «Піца» (вони підсвічені). Результат: <b>3</b>.</p></div>'+
+  '<div class="note">💡 Великі чи малі літери не важать: «піца» і «Піца» для COUNTIF однакові.</div>'+
+  '<p class="tries">У Excel українською назви функцій англійські, як тут. У старих російськомовних версіях Excel ці функції звуться СЧЁТЕСЛИ і СУММЕСЛИ, і міні-таблиця їх теж розуміє. Аргументи розділяють «;» (в англійській версії ще буває «,»).</p>';
+  m.appendChild(selfCheck('th2','Що покаже <code>=COUNTIF(B2:B9;"Сік")</code> для таблиці вище?',['2','15','30'],0,'«Сік» трапляється у 2 рядках (№2 і №5). 30 — це сума цін соків, її порахувала б SUMIF.'));
+};
+R.th3=function(m){
+  m.innerHTML='<div class="kicker">Теорія 3 з 6</div><h1>Які бувають умови</h1>'+
+  '<p>Умова може бути не лише словом. Для чисел можна писати знаки порівняння. Ті самі дані буфету:</p>'+
+  '<div class="scroll"><table class="simple"><tr><th>Умова</th><th>Що означає</th><th>Формула</th><th>Результат</th></tr>'+
+  '<tr><td><code>"Піца"</code></td><td>дорівнює «Піца»</td><td><code>=COUNTIF(B2:B9;"Піца")</code></td><td>3</td></tr>'+
+  '<tr><td><code>"&lt;&gt;Піца"</code></td><td>усе, крім піци</td><td><code>=COUNTIF(B2:B9;"&lt;&gt;Піца")</code></td><td>5</td></tr>'+
+  '<tr><td><code>"&gt;20"</code></td><td>більше за 20</td><td><code>=COUNTIF(C2:C9;"&gt;20")</code></td><td>4</td></tr>'+
+  '<tr><td><code>"&lt;15"</code></td><td>менше за 15</td><td><code>=COUNTIF(C2:C9;"&lt;15")</code></td><td>2</td></tr>'+
+  '<tr><td><code>"&gt;=15"</code></td><td>15 або більше</td><td><code>=COUNTIF(C2:C9;"&gt;=15")</code></td><td>6</td></tr>'+
+  '<tr><td><code>25</code></td><td>дорівнює 25</td><td><code>=COUNTIF(C2:C9;25)</code></td><td>3</td></tr></table></div>'+
+  '<div class="warnbox">⚠️ <b>Три правила.</b><br>1) Текст і знаки порівняння пишемо <b>в лапках</b>: <code>"&gt;20"</code>, а не <code>&gt;20</code>.<br>2) Числова умова працює зі <b>стовпцем чисел</b> (ціни в C), а текстова зі стовпцем слів (товари в B).<br>3) <code>&gt;</code> і <code>&gt;=</code> різні: «більше за 20» не включає саме 20.</div>'+
+  '<div class="note">💡 Умову можна взяти й з клітинки: якщо в E2 написано Піца, то <code>=COUNTIF(B2:B9;E2)</code> теж дасть 3. Так зручно робити зведену табличку.</div>';
+  m.appendChild(selfCheck('th3','Як порахувати покупки, дешевші за 20 грн?',['=COUNTIF(C2:C9;"&lt;20")','=COUNTIF(B2:B9;"&lt;20")','=COUNTIF(C2:C9;&lt;20)'],0,'Шукаємо в цінах (стовпець C), а умову зі знаком беремо в лапки. Буде 4 покупки: два соки і дві булочки.'));
+};
+R.th4=function(m){
+  m.innerHTML='<div class="kicker">Теорія 4 з 6</div><h1>SUMIF: скільки всього?</h1>'+
+  '<p>Тепер інше питання: <b>скільки гривень</b> буфет заробив на піці? Тут треба не рахувати рядки, а <b>додати числа</b> з тих рядків, де товар — піца.</p>'+bufTable(function(r){return r[0]==='Піца'})+
+  '<div class="card"><div class="formula">=SUMIF(<span style="color:var(--blue)">B2:B9</span>; <span style="color:var(--accent)">"Піца"</span>; <span style="color:var(--ok)">C2:C9</span>)</div>'+
+  '<ol style="padding-left:22px;margin:6px 0"><li><b style="color:var(--blue)">B2:B9</b> — <b>де шукати</b> умову (товари);</li>'+
+  '<li><b style="color:var(--accent)">"Піца"</b> — <b>умова</b>;</li>'+
+  '<li><b style="color:var(--ok)">C2:C9</b> — <b>що додавати</b> (ціни).</li></ol>'+
+  '<p>Таблиця знаходить рядки з піцою і додає їхні ціни: 25 + 25 + 25 = <b>75 грн</b>.</p></div>'+
+  '<div class="note">💡 Якщо шукати й додавати треба в <b>тому самому</b> стовпці, третій аргумент можна не писати. Напр., сума всіх цін понад 20 грн: <code>=SUMIF(C2:C9;"&gt;20")</code> = 25 + 25 + 25 + 30 = <b>105</b>.</div>'+
+  '<div class="warnbox">⚠️ Порядок аргументів важливий: спершу <b>де шукати</b>, потім <b>умова</b>, потім <b>що додавати</b>. Якщо переплутати стовпці, вийде 0.</div>';
+  m.appendChild(selfCheck('th4','Скільки грошей принесли булочки? (<code>=SUMIF(B2:B9;"Булочка";C2:C9)</code>)',['2','12','24'],2,'Булочок дві, по 12 грн: 12 + 12 = 24. Число 2 — це кількість, її дала б COUNTIF.'));
+};
+R.th5=function(m){
+  m.innerHTML='<div class="kicker">Теорія 5 з 6</div><h1>Чесне порівняння</h1>'+
+  '<p>Буфет хоче знати, що вигідніше продавати. Порахуємо для кожного товару кількість і суму:</p>'+
+  '<div class="scroll"><table class="simple" style="max-width:520px"><tr><th>Товар</th><th>Скільки разів (COUNTIF)</th><th>Скільки грн (SUMIF)</th><th>В середньому за 1 покупку</th></tr>'+
+  '<tr><td>Піца</td><td>3</td><td><b>75</b></td><td>75 : 3 = 25</td></tr>'+
+  '<tr><td>Салат</td><td>1</td><td>30</td><td>30 : 1 = <b>30</b></td></tr>'+
+  '<tr><td>Сік</td><td>2</td><td>30</td><td>30 : 2 = 15</td></tr>'+
+  '<tr><td>Булочка</td><td>2</td><td>24</td><td>24 : 2 = 12</td></tr></table></div>'+
+  '<div class="card"><p><b>Середнє на одну штуку</b> = SUMIF : COUNTIF. Його можна порахувати однією формулою:</p>'+
+  '<div class="formula">=SUMIF(B2:B9;"Салат";C2:C9) / COUNTIF(B2:B9;"Салат")</div>'+
+  '<p>або поділити клітинку на клітинку, якщо суму й кількість ви вже порахували: <code>=G3/F3</code>.</p></div>'+
+  '<div class="warnbox">⚠️ <b>Пастка аналітика.</b> Найбільша сума не завжди означає «найкраще». Піца принесла найбільше грошей, бо її купили найчастіше. А одна покупка салату приносить більше, ніж одна покупка піци. Коли групи мають різну кількість, порівнюйте <b>середнє на одну штуку</b>.</div>'+
+  '<p class="tries">Для допитливих: в Excel є ще й AVERAGEIF, яка одразу рахує середнє за умовою. Але SUMIF / COUNTIF дає те саме.</p>';
+  m.appendChild(selfCheck('th5','Петро забив за сезон 12 голів у 12 матчах, а Андрій 6 голів у 3 матчах. Хто частіше забиває <b>за один матч</b>?',['Петро, бо 12 більше за 6','Андрій: 2 голи за матч проти 1','Однаково'],1,'12 : 12 = 1 гол за матч у Петра, 6 : 3 = 2 у Андрія. Сума більша в Петра лише тому, що він зіграв більше матчів.'));
+};
+R.th6=function(m){
+  m.innerHTML='<div class="kicker">Теорія 6 з 6</div><h1>Спробуйте в таблиці</h1>'+
+  '<p>Нижче — міні-таблиця з даними буфету. Сірі клітинки містять дані, у білі можна писати. Формула завжди починається зі знака <b>=</b>.</p>'+
+  '<div class="note"><b>Спробуйте:</b><ol style="margin:4px 0 0;padding-left:22px"><li>У клітинку <b>F2</b> введіть <code>=COUNTIF(B2:B9;"Піца")</code> і натисніть Enter. Має вийти 3.</li>'+
+  '<li>У <b>F3</b>: <code>=SUMIF(B2:B9;"Піца";C2:C9)</code>. Має вийти 75.</li>'+
+  '<li>У <b>F4</b>: <code>=F3/F2</code>. Це середня ціна однієї піци.</li>'+
+  '<li>Тепер самі: скільки разів купили сік і скільки він приніс? Пишіть у F5 і F6.</li></ol></div>';
+  var cells={A1:'Покупка',B1:'Товар',C1:'Ціна, грн'};colCells('A',2,BUF.map(function(_,i){return '№'+(i+1)}),cells);colCells('B',2,BUF.map(function(r){return r[0]}),cells);colCells('C',2,BUF.map(function(r){return r[1]}),cells);
+  var ph={E2:'к-сть піци',E3:'грн за піцу',E4:'середнє',E5:'к-сть соку',E6:'грн за сік'};
+  m.appendChild(new Sheet(sheetCfg('demo',6,12,cells,null,ph),S).render());
+  m.appendChild(el('p',{class:'tries'},'Діапазон <b>B2:B9</b> означає «від B2 до B9». Розділювач можна писати як «;», так і «,». Маленькі літери й кириличні А, В, С таблиця теж зрозуміє. Хто працює в Excel чи Google Таблицях, натисніть «Копіювати дані» і вставте дані у свою таблицю.'));
+};
+function taskHeader(n,title,story){return '<div class="kicker">Завдання '+n+' з 4 · '+TASK_POINTS[n]+' бал'+(TASK_POINTS[n]<5?'и':'ів')+'</div><h1>'+title+'</h1><div class="card story">'+story+'</div>'}
+/* одна таблиця каналу на завдання 1–3: формули учня зберігаються між сторінками */
+function channelSheet(){
+  var d=D,cells={A1:'Відео',B1:'Тема',C1:'Перегляди'};
+  colCells('A',2,d.rows.map(function(r){return r.t}),cells);colCells('B',2,d.rows.map(function(r){return r.th}),cells);colCells('C',2,d.rows.map(function(r){return r.v}),cells);
+  var ph={D2:'к-сть Ігри',D3:'к-сть Тварини',D4:'к-сть хітів',D5:'сума Ігри',D6:'сума Тварини',D7:'сума хітів',D8:'середнє Ігри',D9:'середнє Тварини'};
+  return new Sheet(sheetCfg('ch',5,24,cells,'Підписи вже підказані в стовпці D. Клацніть білу клітинку поруч у стовпці E, введіть формулу зі знаком <b>=</b> і натисніть Enter. Формули зберігаються й на інших сторінках завдань.',ph,['A']),S).render();
+}
+R.task1=function(m){
+  m.innerHTML=taskHeader(1,'Огляд каналу','<p>Ось ваші 20 відео: назва, тема і скільки переглядів кожне зібрало. Почнімо з простого: скільки відео якої теми ви зняли і скільки серед них справжніх хітів.</p><p class="tries" style="margin:0">Функція: <b>COUNTIF</b>. Формули пишіть у білих клітинках праворуч (стовпець E, поруч із підписами в D).</p>');
+  m.appendChild(channelSheet());
+  ['t1a','t1b','t1c'].forEach(function(id){m.appendChild(renderQ(id))});
+};
+R.task2=function(m){
+  m.innerHTML=taskHeader(2,'Скільки переглядів дає кожна тема','<p>Кількість відео ви знаєте. Тепер з’ясуйте, скільки переглядів разом зібрала кожна тема.</p><p class="tries" style="margin:0">Функція: <b>SUMIF</b>. Таблиця та сама, ваші формули із завдання 1 на місці.</p>');
+  m.appendChild(channelSheet());
+  ['t2a','t2b','t2c'].forEach(function(id){m.appendChild(renderQ(id))});
+};
+R.task3=function(m){
+  m.innerHTML=taskHeader(3,'Аналітичний висновок','<p>Час вирішити, яке відео знімати наступним. Ваш друг каже: «Знімай ігри, вони ж зібрали найбільше переглядів!» Перевірте, чи він правий. Згадайте пастку аналітика з 5-ї сторінки теорії.</p>');
+  m.appendChild(channelSheet());
+  ['t3a','t3b','t3c','t3d'].forEach(function(id){m.appendChild(renderQ(id))});
+};
+R.task4=function(m){
+  m.innerHTML=taskHeader(4,'Знайди помилку','<p>Ваш друг теж завів канал і пробує рахувати сам, але в нього не все виходить. Допоможіть йому. Таблиця в друга така сама: теми в стовпці B (B2:B21), перегляди в стовпці C (C2:C21).</p>');
+  ['t4a','t4b'].forEach(function(id){m.appendChild(renderQ(id))});
+};
+
+/* ===================== результат і надсилання ===================== */
+function gradeOf(p){return Math.max(1,Math.min(12,Math.round(p)))}
+function verifyCode(name,cls,grade){return cyrb53(norm(name)+'|'+norm(cls)+'|'+grade+'|CNT9').toString(36).slice(-5).toUpperCase()}
+function tasksLine(){return [1,2,3,4].map(function(t){return 'З'+t+': '+fmt(taskPoints(t),1)+'/'+TASK_POINTS[t]}).join(', ')}
+function payload(){
+  var rows=[];
+  for(var id in Q){var a=S.answers[id]||{};rows.push({q:QNAMES[id],answer:(a.given||[]).join(' → ')||'—',correct:Q[id].type==='num'?Q[id].ans:'',tries:a.tries||0,points:a.pts||0})}
+  var mins=S.started?Math.round((new Date(S.finishedAt)-new Date(S.started))/60000):null;
+  return {lesson:LESSON,name:S.name,cls:S.cls,grade:S.grade,points:S.points,code:S.code,tasks:tasksLine(),
+    started:S.started,finished:S.finishedAt,minutes:mins,details:rows};
+}
+function sendResult(cb){
+  var p=payload();
+  if(window.google&&google.script&&google.script.run){
+    google.script.run.withSuccessHandler(function(){cb(true)}).withFailureHandler(function(e){cb(false,String(e&&e.message||e))}).submitResult(p);return;
+  }
+  if(!/^https?:/.test(location.protocol)){cb(false,'Сторінку відкрито як файл, тож автоматичне надсилання не працює.');return}
+  var fd={_subject:SUBJ+': '+p.name+' ('+p.cls+') — '+p.grade+' б.',_template:'table',_captcha:'false',
+    'Учень':p.name,'Клас':p.cls,'Оцінка':p.grade,'Бали':fmt(p.points,1)+' з 12','За завданнями':p.tasks,'Код':p.code,'Хвилин':p.minutes,
+    'Відповіді':p.details.map(function(r){return r.q+': '+r.answer+(r.correct?' (прав. '+r.correct+')':'')+' = '+r.points}).join(' | ')};
+  fetch('https://formsubmit.co/ajax/'+TEACHER_EMAIL,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(fd)})
+    .then(function(r){return r.json().then(function(j){if(r.ok&&String(j.success)!=='false')cb(true);else cb(false,j.message||('HTTP '+r.status))})})
+    .catch(function(e){cb(false,String(e))});
+}
+function mailtoLink(){var p=payload();var body='Учень: '+p.name+'\nКлас: '+p.cls+'\nОцінка: '+p.grade+'\nБали: '+fmt(p.points,1)+' з 12\n'+p.tasks+'\nКод перевірки: '+p.code+'\n';
+  return 'mailto:'+TEACHER_EMAIL+'?subject='+encodeURIComponent(SUBJ+': '+p.name+' — '+p.grade+' б.')+'&body='+encodeURIComponent(body)}
+R.finish=function(m){
+  if(!S.finished){
+    var miss=0;for(var id in Q){var a=S.answers[id];if(!a||!a.done)miss++}
+    m.innerHTML='<div class="kicker">Фініш</div><h1>Здати роботу</h1>'+
+      '<div class="card"><table class="simple"><tr><th>Завдання</th><th>Бали</th></tr>'+
+      [1,2,3,4].map(function(t){return '<tr><td>Завдання '+t+'</td><td>'+fmt(taskPoints(t),1)+' з '+TASK_POINTS[t]+'</td></tr>'}).join('')+
+      '<tr><th>Разом</th><th>'+fmt(totalPoints(),1)+' з 12</th></tr></table></div>'+
+      (miss?'<div class="warnbox">⚠️ Без відповіді: <b>'+miss+'</b> пит. За них буде 0 балів. Поверніться до завдань (кнопка «Назад» або смужки вгорі).</div>':'<div class="note">Усі відповіді дано. Можна здавати.</div>')+
+      '<p>Після здачі змінити відповіді вже не вийде.</p><button class="btn" id="submit">Здати й надіслати вчителю</button>';
+    $('#submit').onclick=function(){
+      if(miss&&!confirm('Є питання без відповіді. Все одно здати?'))return;
+      S.finished=true;S.finishedAt=new Date().toISOString();S.points=totalPoints();S.grade=gradeOf(S.points);S.code=verifyCode(S.name,S.cls,S.grade);S.sent=false;save();render();
+    };
+    return;
+  }
+  m.innerHTML='<div class="kicker">Фініш</div><h1>Готово!</h1>'+
+    '<div class="result"><div>'+esc(S.name)+' · '+esc(S.cls)+'</div><div class="grade">'+S.grade+'</div><div>балів з 12 (набрано '+fmt(S.points,1)+')</div>'+
+    '<div style="margin-top:10px;color:var(--muted);font-size:14px">'+tasksLine().replace(/, /g,' · ')+'</div>'+
+    '<div style="margin-top:14px;font-size:13px;color:var(--muted)">код перевірки</div><div class="code">'+S.code+'</div>'+
+    '<div style="font-size:13px;color:var(--muted);margin-top:4px">'+new Date(S.finishedAt).toLocaleString('uk-UA')+'</div>'+
+    '<div id="sendst"></div></div>'+
+    '<h2>Що варто запам’ятати</h2><div class="card"><ul style="padding-left:22px;margin:0">'+
+    '<li><b>COUNTIF</b>(де шукати; умова) відповідає на питання «скільки разів?».</li>'+
+    '<li><b>SUMIF</b>(де шукати; умова; що додавати) відповідає на питання «скільки всього?».</li>'+
+    '<li>Текст і знаки порівняння в умові беремо в лапки: <code>"Ігри"</code>, <code>"&gt;1000"</code>.</li>'+
+    '<li>Велика сума ще не означає «найкраще». Коли груп різна кількість, порівнюйте <b>середнє на одну штуку</b> = SUMIF : COUNTIF.</li></ul></div>';
+  var st=$('#sendst');
+  function show(){
+    if(S.sent){st.className='status ok';st.innerHTML='✓ Результат надіслано вчителю.';return}
+    st.className='status wait';st.innerHTML='Надсилаю результат вчителю…';
+    sendResult(function(ok,err){
+      if(ok){S.sent=true;save();show()}
+      else{st.className='status bad';st.innerHTML='Не вдалося надіслати автоматично.<br><small>'+esc(err||'')+'</small><br><button class="btn small" id="retry" style="margin-top:8px">Спробувати ще раз</button> <a class="btn small sec" style="text-decoration:none;display:inline-block;margin-top:8px" href="'+mailtoLink()+'">Надіслати листом</a><br><small>Або зробіть скріншот цієї картки й надішліть учителю.</small>';
+        $('#retry').onclick=show}
+    });
+  }
+  show();
+};
+
+/* ===================== навігація ===================== */
+function initData(){D=genData(norm(S.name)+'|'+norm(S.cls));buildQuestions()}
+function canGo(i){return i===0||!!S.name}
+function go(i){if(!canGo(i))return;S.step=i;S.maxStep=Math.max(S.maxStep||0,i);save();render();window.scrollTo(0,0)}
+function updateNav(){
+  var st=$('#steps');st.innerHTML='';
+  PAGES.forEach(function(pg,i){var b=el('button',{type:'button',title:pg.title,'aria-label':pg.title});
+    if(i===S.step)b.className='cur';else if(i<=(S.maxStep||0))b.className='done';
+    b.disabled=!canGo(i);b.onclick=function(){go(i)};st.appendChild(b)});
+  var nav=$('#nav');nav.hidden=!S.name;
+  $('#back').disabled=S.step<=0;
+  var nx=$('#next');nx.hidden=S.step>=PAGES.length-1;
+  nx.textContent=S.step===PAGES.length-2?'До здачі →':(S.step===6?'До завдань →':'Далі →');
+  var pts=S.name&&D?(' · бали: '+fmt(S.finished?S.points:totalPoints(),1)+' з 12'):'';
+  $('#navmid').textContent=PAGES[S.step].title+pts;
+  $('#who').textContent=S.name?(S.name+' · '+S.cls):'';
+}
+function render(){var m=$('#main');m.innerHTML='';if(S.name&&!D)initData();if(!S.name)S.step=0;R[PAGES[S.step].id](m);updateNav()}
+$('#back').onclick=function(){go(S.step-1)};
+$('#next').onclick=function(){go(S.step+1)};
+render();
+</script>
+</body>
+</html>
